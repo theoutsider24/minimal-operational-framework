@@ -18,8 +18,7 @@ jobs:
       - store_test_results:
           path: junit.xml
   docs-deploy:
-    docker:
-      - image: python
+    executor: python/default
     steps:
       - checkout
       - python/install-packages:
