@@ -19,7 +19,7 @@ jobs:
           path: junit.xml
   docs-deploy:
     docker:
-      - image: cimg/python:3.12
+      - image: cimg/python:3.12-node
     steps:
       - checkout
       - python/install-packages:
@@ -28,6 +28,15 @@ jobs:
           name: Build docs
           command: |
             poetry run sphinx-build -M html docs/source public
+      - run:
+          name: Install and configure node dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "$GITHUB_USER_EMAIL"
+            git config user.name "$GITHUB_USER_NAME"
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:8YU0qcR3ryYTBpDZ9YwBW6IWplrGGl2KreD5YVoUkYk"
       - run:
           name: Deploy docs to gh-pages branch
           command: gh-pages --dotfiles --message "[skip ci] Updates" --dist public/html
