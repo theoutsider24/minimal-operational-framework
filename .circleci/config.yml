@@ -4,19 +4,6 @@ version: 2.1
 orbs:
   python: circleci/python@2
 jobs:
-  test-python:
-    # Install dependencies and run tests
-    docker:
-      - image: cimg/python:3.12-node
-    steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: poetry
-      - run:
-          name: Run tests
-          command: poetry run pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
-      - store_test_results:
-          path: junit.xml
   docs-deploy:
     docker:
       - image: cimg/python:3.12-node
@@ -46,4 +33,8 @@ jobs:
 workflows:
   build-docs:
     jobs:
-      - docs-deploy
+      - docs-deploy:
+          filters:
+            branches:
+              only:
+                - main
