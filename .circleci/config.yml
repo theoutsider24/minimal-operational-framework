@@ -29,6 +29,9 @@ jobs:
           command: |
             poetry run sphinx-build -M html docs/source public
       - run:
+          name: Disable jekyll builds
+          command: touch public/html/.nojekyll
+      - run:
           name: Install and configure node dependencies
           command: |
             npm install -g --silent gh-pages@2.0.1
