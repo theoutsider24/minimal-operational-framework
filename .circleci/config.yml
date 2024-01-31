@@ -1,0 +1,40 @@
+# This config was automatically generated from your source code
+# Stacks detected: deps:python:.,package_manager:poetry:.
+version: 2.1
+orbs:
+  python: circleci/python@2
+jobs:
+  docs-deploy:
+    docker:
+      - image: cimg/python:3.12-node
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: poetry
+      - run:
+          name: Build docs
+          command: |
+            poetry run sphinx-build -M html docs/source public
+      - run:
+          name: Disable jekyll builds
+          command: touch public/html/.nojekyll
+      - run:
+          name: Install and configure node dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "$GITHUB_USER_EMAIL"
+            git config user.name "$GITHUB_USER_NAME"
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:8YU0qcR3ryYTBpDZ9YwBW6IWplrGGl2KreD5YVoUkYk"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist public/html
+workflows:
+  build-docs:
+    jobs:
+      - docs-deploy:
+          filters:
+            branches:
+              only:
+                - main
