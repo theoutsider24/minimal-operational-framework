@@ -134,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -189,7 +189,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -197,6 +197,18 @@
         <article role="main">
           <section id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h1>
+<section id="internal">
+<h2>Internal<a class="headerlink" href="#internal" title="Link to this heading">#</a></h2>
+<p>The purpose of internal documentation should be to provide a single authoritative set of facts about the system</p>
+<p>The best way to achieve this is to keep the docs as close to the system implementation as possible</p>
+<p><code class="docutils literal notranslate"><span class="pre">Confluence</span></code> has been a tool of choice in many organisations however this information can very quicky
+become stale as well as being difficult to find</p>
+<p>Documentation-as-code has the advantage that it can both be generated from the source code and kept close to
+the source which makes it easier to spot drift and review documentation changes</p>
+</section>
+<section id="external">
+<h2>External<a class="headerlink" href="#external" title="Link to this heading">#</a></h2>
+</section>
 </section>
 
         </article>
@@ -242,8 +254,28 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Documentation</a><ul>
+<li><a class="reference internal" href="#internal">Internal</a></li>
+<li><a class="reference internal" href="#external">External</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
