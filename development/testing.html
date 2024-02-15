@@ -209,6 +209,93 @@
 </section>
 <section id="test-driven-development">
 <h2>Test-Driven Development<a class="headerlink" href="#test-driven-development" title="Link to this heading">#</a></h2>
+<section id="what-is-it-tdd">
+<h3>What is it TDD?<a class="headerlink" href="#what-is-it-tdd" title="Link to this heading">#</a></h3>
+<p>It’s about driving development from test, implementing a better code design and less about testing (seriously). You organise all your development activities around the need to verify what it is you’re developing and so testing becomes the tool that does the verification of code implementation ‘correctness’.</p>
+<p>TDD encourages a more iterative approach to software development - moving in small steps, one feature/unit/component at a time.</p>
+</section>
+<section id="tdd-workflow">
+<h3>TDD workflow<a class="headerlink" href="#tdd-workflow" title="Link to this heading">#</a></h3>
+<p><img alt="TDD workflow" src="../_images/tdd-workflow.png" /></p>
+<section id="steps">
+<h4>Steps:<a class="headerlink" href="#steps" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Express your intent in the form of a test. This is a mini specification in the form of a test. Think of it as writing a test for the code that does not exist. A good prompt could be to follow either the ‘Given, when, then’ or the ‘Arrange, Action, Assert’ framework. For example, if you want to test a feature that lets an authenticated user create posts, you could have something like the below:</p></li>
+</ol>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">...</span>
+<span class="x">//Given we have a user</span>
+<span class="x">//Arrange</span>
+<span class="x">$user = UserFactory::new()-&gt;create();</span>
+
+<span class="x">//And this user is authenticated</span>
+<span class="x">//Arrange</span>
+<span class="x">$this-&gt;signIn($user);</span>
+<span class="x">$this-&gt;assertTrue($user-&gt;isAuthenticated());</span>
+
+<span class="x">//When the user requests to create a new post</span>
+<span class="x">//Act</span>
+<span class="x">$this-&gt;post(route(&#39;posts.store&#39;), [&#39;title&#39; =&gt; &#39;Test&#39;, &#39;body&#39; =&gt; &#39;Lorem ipsum...&#39;])-&gt;assertSessionHasNoErrors();</span>
+
+<span class="x">//Then the post is successfully created</span>
+<span class="x">//Assert</span>
+<span class="x">$this-&gt;assertDatabaseHas(&#39;posts&#39;, 1);</span>
+
+<span class="x">//And the user is the author of this post</span>
+<span class="x">//Assert</span>
+<span class="x">$post = Post::first();</span>
+<span class="x">$this-&gt;assertEqual($post-&gt;author, $user);</span>
+</pre></div>
+</div>
+<p>Here you simply express the steps you think are needed to be taken to create a post as an authenticated user. In other words, you are writing the code you believe the user would have taken (the test becomes a specification of this feature).</p>
+<ol class="arabic simple" start="2">
+<li><p>Run the test and see it fail. Of course it’s going to fail because you have not written the code that implements this test (specification). This is a useful feedback, it tells you step by step what the issues are and prompts you to sort them one by one. Using the example above, the test execution would most likely inform you of the following:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span><span class="p">:</span> <span class="n">Route</span> <span class="s1">&#39;posts.store&#39;</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span><span class="o">.</span>
+<span class="o">///</span> <span class="n">assuming</span> <span class="n">that</span> <span class="n">the</span> <span class="n">User</span> <span class="ow">and</span> <span class="n">its</span> <span class="n">factor</span> <span class="n">are</span> <span class="n">already</span> <span class="ow">in</span> <span class="n">place</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Create a minimum code to pass the test. You know now that you need to focus on creating this <code class="docutils literal notranslate"><span class="pre">posts.store</span></code> route which can handle accepting a <code class="docutils literal notranslate"><span class="pre">title</span></code> and <code class="docutils literal notranslate"><span class="pre">body</span></code> inputs as well as call a relevant controller or service method to a post, etc.</p></li>
+<li><p>Run the test again. Having implemented the route, you run the test again and it will show another error. This is good as you are making progress and moving closer to implementing the test specification (feature). You then make another code implementation to address the next error, run the test, repeat this process until all the test errors are resolved and the test passes.</p></li>
+</ol>
+<p>The important bit here is that you got to the stable state of your feature where the test passes. Now you can use this as a ‘defence’ line to then start refactoring (improving) your code and/or test. This is now a tested, bear minimum code implementation that meets the feature specification. There are two important benefits here that are often overlooked: <strong>speed</strong> (minimum time spent implementing the feature) and <strong>quality</strong> (test is a proof that the feature works as specified).</p>
+<ol class="arabic simple" start="5">
+<li><p>Refactor. Now that you are in a stable, passing test state you can focus on refactoring both the test and the code implementation for quality. Quality here could mean many things: readability, generality or reusability of functions, classes or making the test and implementation simpler. You are more confident in doing any type of refactoring here as you have a passing test to fallback on.</p></li>
+</ol>
+</section>
+<section id="another-interpretation-of-the-tdd-workflow">
+<h4>Another interpretation of the TDD workflow<a class="headerlink" href="#another-interpretation-of-the-tdd-workflow" title="Link to this heading">#</a></h4>
+<p>Red. Green. Refactor.</p>
+<ul class="simple">
+<li><p><em><strong>Red</strong></em> - Write a test and see it fail.</p></li>
+<li><p><em><strong>Green</strong></em> - Write code and see the test pass.</p></li>
+<li><p><em><strong>Refactor</strong></em> - Make the test and/or code better.</p></li>
+</ul>
+</section>
+</section>
+<section id="why-use-tdd">
+<h3>Why use TDD?<a class="headerlink" href="#why-use-tdd" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Better code design - start with the test and design the external view of the feature implementation. This is achievable because when you write the test for the code that does not exist - you can think of the steps from the point of the consumer of the feature (end user) and focus on the steps they need to take to get to the desired result. This is quite the opposite from the situation where you implement the code as a feature producer (jumping straight to the solution). Since you do not have the implemented feature code, all you do is designing how you expect end users to use you code. Unless you are an idiot, all you want to do is to make your code easier to understand and use. If the test setup looks complex and convoluted - you can make it better. Little time is wasted here to make the test better as there is no actual implementation yet - you are designing via a test the code implementation you wish you had for your end user to use.</p></li>
+<li><p>Improves code quality - better designed code + fully tested feature implementation raises the overall quality of the software. You design better tests which make you focus on designing a well tested code and the well tested code has the same properties software engineers value in the high quality software. Also, the by-product of TDD is a test suite that can be run again and gain. This also gives you confidence to refactor and continually iterate/improve your code base, raising the overall quality of the system.</p></li>
+<li><p>Helps understand the problem - this is a stumbling block for many teams starting with TDD. Some are struggling to think of their system without thinking about the solution. But how can you come up with a solution if you do not understand the problem. TDD focuses on the problem by forcing you to come up with a design of the steps that need to be taken by the end user expressed in a form of a test. There are complex situations where it is not obvious what the steps should be taken when writing tests. Part of the trick in TDD is to work incrementally, in small steps. Those complex situations need to be broken down and the design of the individual broken pieces tackled in self-contained, independent, incremental test cases.
+A note to remember with TDD, a good TDD test expresses expected outcomes, not specific solutions.</p></li>
+<li><p>Faster delivery - quality matters if you want to move fast. If you want to create a better software you need to move faster, to move faster you need to create better software. The quality and speed are linked. There is no trade-off between speed and quality. Surely higher quality means more time spent on planning, figuring out the best design, writing tests, etc. That’s true, but the contrast to that is cutting corners by omitting some or all of the above mentioned steps and going straight to implementation stage and face the risk of re-work. Any re-work, bug chasing, troubleshooting, tech debt are costly. This is the time taken away from the team who could have been working on new features or services delivering value to the clients. Quality is a long term benefit that allows engineering teams to move at a faster and sustainable pace. <em><strong>Time spent doing a good job is an investment not a cost.</strong></em></p></li>
+</ul>
+</section>
+<section id="when-to-test">
+<h3>When to test?<a class="headerlink" href="#when-to-test" title="Link to this heading">#</a></h3>
+<p>Always.</p>
+</section>
+<section id="tdd-learning-resources-and-credits">
+<h3>TDD learning resources and credits<a class="headerlink" href="#tdd-learning-resources-and-credits" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Code Katas for practicing TDD with <a class="reference external" href="https://beta.cyber-dojo.org/creator/home">cyber-dojo</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=llaUBH5oayw">TDD - what? why? and how?, Continuous Delivery</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=ZmgbjaRfp_Q">How to build quality software fast, Continuous Delivery</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=XsbMNWW-hdY">Why hasn’t TDD taken over the world?, Continuous Delivery</a></p></li>
+</ul>
+</section>
 </section>
 <section id="mocking">
 <h2>Mocking<a class="headerlink" href="#mocking" title="Link to this heading">#</a></h2>
@@ -275,7 +362,18 @@
 <li><a class="reference internal" href="#unit-testing">Unit Testing</a></li>
 <li><a class="reference internal" href="#manual-testing">Manual Testing</a></li>
 <li><a class="reference internal" href="#behaviour-driven-development">Behaviour-Driven Development</a></li>
-<li><a class="reference internal" href="#test-driven-development">Test-Driven Development</a></li>
+<li><a class="reference internal" href="#test-driven-development">Test-Driven Development</a><ul>
+<li><a class="reference internal" href="#what-is-it-tdd">What is it TDD?</a></li>
+<li><a class="reference internal" href="#tdd-workflow">TDD workflow</a><ul>
+<li><a class="reference internal" href="#steps">Steps:</a></li>
+<li><a class="reference internal" href="#another-interpretation-of-the-tdd-workflow">Another interpretation of the TDD workflow</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#why-use-tdd">Why use TDD?</a></li>
+<li><a class="reference internal" href="#when-to-test">When to test?</a></li>
+<li><a class="reference internal" href="#tdd-learning-resources-and-credits">TDD learning resources and credits</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#mocking">Mocking</a></li>
 <li><a class="reference internal" href="#performance-testing">Performance Testing</a></li>
 <li><a class="reference internal" href="#mutation-testing">Mutation Testing</a></li>
