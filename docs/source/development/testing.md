@@ -15,7 +15,7 @@ It’s about driving development from test, implementing a better code design an
 TDD encourages a more iterative approach to software development - moving in small steps, one feature/unit/component at a time. 
 
 ### TDD workflow
-![TDD workflow](../images/tdd-workflow.png)
+![TDD workflow](../images/tdd-workflow.drawio.png)
 
 #### Steps:
 
